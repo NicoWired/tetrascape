@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://cb4igblj6e2dt"]
+
+[ext_resource type="Script" uid="uid://ultenaxv7ed" path="res://source/tetris/board/board.gd" id="1_fugdb"]
+
+[node name="Board" type="Node2D"]
+script = ExtResource("1_fugdb")
