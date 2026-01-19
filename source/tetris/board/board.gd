@@ -15,6 +15,9 @@ func _process(delta: float) -> void:
 		return
 	
 	#region inputs
+	if Input.is_action_just_pressed("drop"):
+		hard_drop()
+
 	if Input.is_action_just_pressed("left"):
 		try_to_move(Vector2i.LEFT)
 	
@@ -82,4 +85,21 @@ func bottom_reached() -> void:
 		board_state[Vector2i(square.position / GameConfig.TILE_SIZE)] = square
 		square.reparent(self)
 	spawn_piece()
+#endregion
+
+#region drop
+func find_bottom():
+	var tiles_down: int = 1
+	while true:
+		var new_coords: Array[Vector2i] = current_piece.get_move_coords(Vector2i(0, tiles_down))
+		if check_valid_cooords(new_coords):
+			tiles_down += 1
+		else:
+			return current_piece.get_move_coords(Vector2i(0, tiles_down - 1))
+
+func hard_drop() -> void:
+	var target_coords = find_bottom()
+	var tiles_down: int = int(current_piece.squares[0].position.y / GameConfig.TILE_SIZE)
+	current_piece.move_piece(target_coords, Vector2i(0, tiles_down))
+	bottom_reached()
 #endregion
