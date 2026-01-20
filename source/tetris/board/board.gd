@@ -84,6 +84,9 @@ func bottom_reached() -> void:
 	for square: PieceSquare in current_piece.squares:
 		board_state[Vector2i(square.position / GameConfig.TILE_SIZE)] = square
 		square.reparent(self)
+	var completed_lines = find_lines()
+	if completed_lines.size() > 0:
+		clear_lines(completed_lines)
 	spawn_piece()
 #endregion
 
@@ -102,4 +105,54 @@ func hard_drop() -> void:
 	var tiles_down: int = int(current_piece.squares[0].position.y / GameConfig.TILE_SIZE)
 	current_piece.move_piece(target_coords, Vector2i(0, tiles_down))
 	bottom_reached()
+#endregion
+
+#region lines
+func find_lines() -> Array[int]:
+	var lines: Array[int] = []
+	for y in range(GameConfig.BOARD_SIZE.y):
+		var line_complete: bool = true
+		for x in range(GameConfig.BOARD_SIZE.x):
+			if not board_state[Vector2i(x,y)]:
+				line_complete = false
+				break
+		if line_complete:
+			lines.append(y)
+	return lines
+
+func clear_lines(lines: Array[int]) -> void:
+	lines.sort()
+	
+	for line in lines:
+		for x in range(GameConfig.BOARD_SIZE.x):
+			var pos = Vector2i(x, line)
+			if board_state[pos] is PieceSquare:
+				board_state[pos].queue_free()
+				board_state[pos] = null
+	
+	var new_board_state = {}
+	for x in range(GameConfig.BOARD_SIZE.x):
+		for y in range(GameConfig.BOARD_SIZE.y):
+			new_board_state[Vector2i(x, y)] = null
+	
+	for y in range(GameConfig.BOARD_SIZE.y - 1, -1, -1):
+		if y in lines:
+			continue
+			
+		var shift_amount = 0
+		for line in lines:
+			if line > y:
+				shift_amount += 1
+		
+		var new_y = y + shift_amount
+		
+		for x in range(GameConfig.BOARD_SIZE.x):
+			var current_pos = Vector2i(x, y)
+			if board_state[current_pos] is PieceSquare:
+				var square = board_state[current_pos]
+				var new_pos = Vector2i(x, new_y)
+				square.position = Vector2(new_pos.x, new_pos.y) * GameConfig.TILE_SIZE
+				new_board_state[new_pos] = square
+	
+	board_state = new_board_state
 #endregion
