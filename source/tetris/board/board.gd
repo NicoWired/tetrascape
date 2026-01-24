@@ -1,15 +1,19 @@
+class_name Board
 extends Node2D
+
+signal player_entered_piece
+
+const PIECE_X_OFFSET: int = 3
 
 var current_piece: Piece
 var board_state: Dictionary
 var remaining_gravity_cd: float
+@onready var squares: Node2D = $Squares
 
-# Called when the node enters the scene tree for the first time.
+
 func _ready() -> void:
-	initialize_board()
-	spawn_piece()
+	initialize()
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	if not GlobalStates.toggle:
 		return
@@ -41,13 +45,20 @@ func _process(delta: float) -> void:
 		else:
 			bottom_reached()
 
-func initialize_board() -> void:
+func initialize() -> void:
 	remaining_gravity_cd = GameConfig.GRAVITY_CD
 	#for i in range(PIECES_IN_QUEUE):
 		#next_pieces.append(await piece_types.pick_random().new())
 	for x in range(GameConfig.BOARD_SIZE.x):
 		for y in range(GameConfig.BOARD_SIZE.y):
 			board_state[Vector2i(x,y)] = null
+	
+	for square in squares.get_children():
+		square.queue_free()
+	
+	if current_piece:
+		current_piece.queue_free()
+	spawn_piece()
 
 #region piece movement and rotation
 func check_valid_cooords(coords: Array[Vector2i]) -> bool:
@@ -73,17 +84,20 @@ func try_to_rotate(direction: int) -> void:
 	var new_coords: Array[Vector2i] = current_piece.get_rotation_coords(direction)
 	if check_valid_cooords(new_coords):
 		current_piece.rotate_piece(new_coords, direction)
+
+	
 #endregion
 
 #region piece life cycle
 func spawn_piece(piece_type: PieceData.PIECE_SHAPE = PieceData.PIECE_SHAPE.R) -> void:
 	current_piece = Piece.new(piece_type)
+	current_piece.player_entered.connect(func(): player_entered_piece.emit())
 	add_child(current_piece)
 
 func bottom_reached() -> void:
 	for square: PieceSquare in current_piece.squares:
 		board_state[Vector2i(square.position / GameConfig.TILE_SIZE)] = square
-		square.reparent(self)
+		square.reparent(squares)
 	var completed_lines = find_lines()
 	if completed_lines.size() > 0:
 		clear_lines(completed_lines)

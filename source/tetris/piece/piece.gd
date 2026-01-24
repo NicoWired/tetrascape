@@ -2,6 +2,7 @@ class_name Piece
 extends Node2D
 
 signal piece_moved
+signal player_entered
 
 var piece_res: PieceData
 var current_position: int = 1
@@ -20,6 +21,7 @@ func create_piece(coordinates: Array[Vector2i]) -> void:
 	for coord: Vector2i in coordinates:
 		var piece_square := PieceSquare.create(piece_res.piece_texture)
 		piece_square.position = (coord+board_position) * GameConfig.TILE_SIZE
+		piece_square.player_entered.connect(func(): player_entered.emit())
 		
 		squares.append(piece_square)
 		add_child(piece_square)
@@ -64,7 +66,6 @@ func move_piece(new_coords: Array[Vector2i], direction: Vector2i) -> void:
 	piece_moved.emit()
 
 func get_move_coords(direction: Vector2i) -> Array[Vector2i]:
-	assert(direction.x in [-1,0,1], "direction.x can only be 1 or -1")
 	var new_coords: Array[Vector2i]
 	for square: PieceSquare in squares:
 		new_coords.append(Vector2i(square.position / GameConfig.TILE_SIZE) + direction)

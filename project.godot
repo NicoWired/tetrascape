@@ -11,6 +11,7 @@ config_version=5
 [application]
 
 config/name="Tetrascape"
+run/main_scene="uid://x5p4h7nwxi2n"
 config/features=PackedStringArray("4.5", "Mobile")
 config/icon="res://icon.svg"
 
@@ -68,6 +69,7 @@ drop={
 2d_physics/layer_1="Player"
 2d_physics/layer_2="Pieces"
 2d_physics/layer_3="Boundaries"
+2d_physics/layer_4="Exit"
 
 [rendering]
 

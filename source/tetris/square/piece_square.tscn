@@ -13,3 +13,6 @@ centered = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_pwv8o")
+
+[node name="PieceArea" type="Area2D" parent="."]
+collision_layer = 2
