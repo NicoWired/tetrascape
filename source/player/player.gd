@@ -10,7 +10,9 @@ enum States {
 
 const ACCELERATION: float = 1000.0
 const MAX_SPEED: float = 350.0
-const JUMP_VELOCITY = -450.0
+const MAX_JUMP_VELOCITY = -450.0
+const WALL_JUMP_X: float = 350.0
+const WALL_FRICTION: float = 0.3
 
 var state: States:
 	set(value):
@@ -38,12 +40,17 @@ func _physics_process(delta: float) -> void:
 	if GlobalStates.toggle:
 		return
 
-	# Add the gravity.
-	velocity += get_gravity() * delta
+	if state == States.WALL and velocity.y > 0:
+		velocity += get_gravity() * delta * WALL_FRICTION
+	else:
+		velocity += get_gravity() * delta
 
-	# Handle jump.
-	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
-		velocity.y = JUMP_VELOCITY
+	if Input.is_action_just_pressed("jump"):
+		if is_on_floor():
+			velocity.y = MAX_JUMP_VELOCITY
+		if is_on_wall_only():
+			velocity.y = MAX_JUMP_VELOCITY
+			velocity.x = WALL_JUMP_X * get_wall_normal().x
 
 
 	var direction := Input.get_axis("left", "right")
