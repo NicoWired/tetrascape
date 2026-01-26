@@ -3,7 +3,10 @@ extends StaticBody2D
 
 signal player_entered
 
+const MAX_FRAMES_PLAYER_INSIDE: int = 3
+
 var square_texture: Texture2D
+var frames_player_inside: int = -1
 
 @onready var collision_shape_2d: CollisionShape2D = $CollisionShape2D
 @onready var square_sprite: Sprite2D = $SquareSprite
@@ -29,6 +32,20 @@ func _ready() -> void:
 	piece_area.body_entered.connect(on_body_entered)
 	piece_area.add_child(collision_shape_2d_area)
 
+func _physics_process(_delta) -> void:
+	# this should prevent the signal from triggering when the player overlaps for only one frame
+	if frames_player_inside > 0:
+		var player_found: bool = false
+		for body in piece_area.get_overlapping_bodies():
+			if body is Player:
+				frames_player_inside -= 1
+				player_found = true
+				break
+		if not player_found:
+			frames_player_inside = -1
+	elif frames_player_inside == 0:
+		player_entered.emit()
+
 func on_body_entered(body) -> void:
 	if body is Player:
-		player_entered.emit()
+		frames_player_inside = MAX_FRAMES_PLAYER_INSIDE

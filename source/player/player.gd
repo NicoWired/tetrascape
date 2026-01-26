@@ -8,11 +8,15 @@ enum States {
 	JUMPING
 }
 
+# movement constants
 const ACCELERATION: float = 1000.0
 const MAX_SPEED: float = 350.0
 const MAX_JUMP_VELOCITY = -450.0
 const WALL_JUMP_X: float = 350.0
 const WALL_FRICTION: float = 0.3
+
+const BASE_SIZE: int = 64
+const SCALE_SIZE: float = float(GameConfig.TILE_SIZE) / BASE_SIZE
 
 var state: States:
 	set(value):
@@ -33,6 +37,7 @@ var state: States:
 
 
 func _ready() -> void:
+	scale = Vector2(SCALE_SIZE, SCALE_SIZE)
 	GlobalStates.toggled_changed.connect(on_toggle_changed)
 	initialize()
 
@@ -40,6 +45,7 @@ func _physics_process(delta: float) -> void:
 	if GlobalStates.toggle:
 		return
 
+	# apply grvity
 	if state == States.WALL and velocity.y > 0:
 		velocity += get_gravity() * delta * WALL_FRICTION
 	else:
@@ -51,7 +57,6 @@ func _physics_process(delta: float) -> void:
 		if is_on_wall_only():
 			velocity.y = MAX_JUMP_VELOCITY
 			velocity.x = WALL_JUMP_X * get_wall_normal().x
-
 
 	var direction := Input.get_axis("left", "right")
 	if direction:

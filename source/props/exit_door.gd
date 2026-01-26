@@ -3,7 +3,7 @@ extends Sprite2D
 
 signal player_entered
 
-const DOOR_SHAPE_SCALE: float = 0.33
+const DOOR_SHAPE_SCALE: float = 0.5
 
 @onready var door_area: Area2D = $DoorArea
 @onready var door_collision_shape: CollisionShape2D = $DoorArea/DoorCollisionShape
