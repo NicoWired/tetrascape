@@ -9,15 +9,18 @@ enum States {
 }
 
 # movement constants
-const ACCELERATION: float = 1000.0
-const MAX_SPEED: float = 350.0
-const MAX_JUMP_VELOCITY = -450.0
-const WALL_JUMP_X: float = 350.0
+const ACCELERATION: float = 1000
+const MAX_SPEED: float = 350
+const MAX_JUMP_VELOCITY = -450
+const WALL_JUMP_X: float = 350
 const WALL_FRICTION: float = 0.3
 
 const BASE_SIZE: int = 64
 const SCALE_SIZE: float = float(GameConfig.TILE_SIZE) / BASE_SIZE
+const COYOTE_TIME: float = 0.03
 
+var remaining_coyote_time: float = 0
+var was_on_floor: bool = false
 var state: States:
 	set(value):
 		match value:
@@ -44,19 +47,30 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	if GlobalStates.toggle:
 		return
+	
+	# activate coyote time
+	if was_on_floor and not is_on_floor():
+		was_on_floor = false
+		remaining_coyote_time = COYOTE_TIME
 
-	# apply grvity
-	if state == States.WALL and velocity.y > 0:
-		velocity += get_gravity() * delta * WALL_FRICTION
+	# apply gravity
+	if remaining_coyote_time <= 0:
+		if state == States.WALL and velocity.y > 0:
+			velocity += get_gravity() * delta * WALL_FRICTION
+		else:
+			velocity += get_gravity() * delta
 	else:
-		velocity += get_gravity() * delta
+		velocity.y = 0
+		remaining_coyote_time = move_toward(remaining_coyote_time, 0, delta)
 
 	if Input.is_action_just_pressed("jump"):
-		if is_on_floor():
+		if is_on_floor() or remaining_coyote_time > 0:
 			velocity.y = MAX_JUMP_VELOCITY
 		if is_on_wall_only():
 			velocity.y = MAX_JUMP_VELOCITY
 			velocity.x = WALL_JUMP_X * get_wall_normal().x
+		was_on_floor = false
+		remaining_coyote_time = 0
 
 	var direction := Input.get_axis("left", "right")
 	if direction:
@@ -73,8 +87,10 @@ func _physics_process(delta: float) -> void:
 			state = States.IDLE
 		else:
 			state = States.RUNNING
+		was_on_floor = true
 	elif is_on_wall_only():
 		state = States.WALL
+		remaining_coyote_time = 0
 	else:
 		state = States.JUMPING
 	
