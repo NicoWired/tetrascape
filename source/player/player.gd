@@ -18,7 +18,6 @@ const WALL_JUMP_X: int = 350
 const WALL_FRICTION: float = 0.3
 const COYOTE_TIME: float = 0.03
 
-
 # character size
 const BASE_SIZE: int = 64
 const SCALE_SIZE: float = float(GameConfig.TILE_SIZE) / BASE_SIZE

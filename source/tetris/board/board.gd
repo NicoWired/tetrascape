@@ -5,6 +5,7 @@ signal player_entered_piece
 
 const PIECE_X_OFFSET: int = 3
 
+var current_piece_position: Vector2i = Vector2i(0,0)
 var current_piece: Piece
 var board_state: Dictionary
 var remaining_gravity_cd: float
@@ -40,15 +41,14 @@ func _process(delta: float) -> void:
 	if remaining_gravity_cd <= 0:
 		remaining_gravity_cd = GameConfig.GRAVITY_CD
 		var new_coords: Array[Vector2i] = current_piece.get_move_coords(Vector2i.DOWN)
-		if check_valid_cooords(new_coords):
-			current_piece.move_piece(new_coords, Vector2i.DOWN)
+		if check_valid_coords(new_coords):
+			current_piece_position += Vector2i.DOWN
+			current_piece.move_piece(new_coords)
 		else:
 			bottom_reached()
 
 func initialize() -> void:
 	remaining_gravity_cd = GameConfig.GRAVITY_CD
-	#for i in range(PIECES_IN_QUEUE):
-		#next_pieces.append(await piece_types.pick_random().new())
 	for x in range(GameConfig.BOARD_SIZE.x):
 		for y in range(GameConfig.BOARD_SIZE.y):
 			board_state[Vector2i(x,y)] = null
@@ -61,7 +61,7 @@ func initialize() -> void:
 	spawn_piece()
 
 #region piece movement and rotation
-func check_valid_cooords(coords: Array[Vector2i]) -> bool:
+func check_valid_coords(coords: Array[Vector2i]) -> bool:
 	var taken_tiles: Array[Vector2i]
 	for tile: Vector2i in board_state:
 		if board_state[tile] is PieceSquare:
@@ -77,12 +77,13 @@ func check_valid_cooords(coords: Array[Vector2i]) -> bool:
 
 func try_to_move(direction: Vector2i) -> void:
 	var new_coords: Array[Vector2i] = current_piece.get_move_coords(direction)
-	if check_valid_cooords(new_coords):
-		current_piece.move_piece(new_coords, direction)
+	if check_valid_coords(new_coords):
+		current_piece_position += direction
+		current_piece.move_piece(new_coords)
 
 func try_to_rotate(direction: int) -> void:
-	var new_coords: Array[Vector2i] = current_piece.get_rotation_coords(direction)
-	if check_valid_cooords(new_coords):
+	var new_coords: Array[Vector2i] = current_piece.get_rotation_coords(direction, current_piece_position)
+	if check_valid_coords(new_coords):
 		current_piece.rotate_piece(new_coords, direction)
 
 	
@@ -90,6 +91,7 @@ func try_to_rotate(direction: int) -> void:
 
 #region piece life cycle
 func spawn_piece(piece_type: PieceData.PIECE_SHAPE = PieceData.PIECE_SHAPE.R) -> void:
+	current_piece_position = Vector2i.ZERO
 	current_piece = Piece.new(piece_type)
 	current_piece.player_entered.connect(func(): player_entered_piece.emit())
 	add_child(current_piece)
@@ -109,7 +111,7 @@ func find_bottom():
 	var tiles_down: int = 1
 	while true:
 		var new_coords: Array[Vector2i] = current_piece.get_move_coords(Vector2i(0, tiles_down))
-		if check_valid_cooords(new_coords):
+		if check_valid_coords(new_coords):
 			tiles_down += 1
 		else:
 			return current_piece.get_move_coords(Vector2i(0, tiles_down - 1))
@@ -117,7 +119,8 @@ func find_bottom():
 func hard_drop() -> void:
 	var target_coords = find_bottom()
 	var tiles_down: int = int(current_piece.squares[0].position.y / GameConfig.TILE_SIZE)
-	current_piece.move_piece(target_coords, Vector2i(0, tiles_down))
+	current_piece_position += Vector2i(0, tiles_down)
+	current_piece.move_piece(target_coords)
 	bottom_reached()
 #endregion
 
