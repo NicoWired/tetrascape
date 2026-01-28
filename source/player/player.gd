@@ -9,16 +9,21 @@ enum States {
 }
 
 # movement constants
-const ACCELERATION: float = 1000
-const MAX_SPEED: float = 350
-const MAX_JUMP_VELOCITY = -450
-const WALL_JUMP_X: float = 350
+const VERTICAL_ACCELERATION: int = 1000
+const MAX_SPEED: int = 350
+const MIN_JUMP_VELOCITY: int = -300
+const JUMP_CHARGE_TIME: float = 0.5
+const JUMP_INCREMENT: int = 400
+const WALL_JUMP_X: int = 350
 const WALL_FRICTION: float = 0.3
-
-const BASE_SIZE: int = 64
-const SCALE_SIZE: float = float(GameConfig.TILE_SIZE) / BASE_SIZE
 const COYOTE_TIME: float = 0.03
 
+
+# character size
+const BASE_SIZE: int = 64
+const SCALE_SIZE: float = float(GameConfig.TILE_SIZE) / BASE_SIZE
+
+var charging_jump: float = 0
 var remaining_coyote_time: float = 0
 var was_on_floor: bool = false
 var state: States:
@@ -62,22 +67,29 @@ func _physics_process(delta: float) -> void:
 	else:
 		velocity.y = 0
 		remaining_coyote_time = move_toward(remaining_coyote_time, 0, delta)
-
+	
+	if Input.is_action_pressed("jump") and charging_jump > 0:
+		velocity.y -= JUMP_INCREMENT * delta
+	
+	charging_jump = move_toward(charging_jump, 0, delta)
+	
 	if Input.is_action_just_pressed("jump"):
 		if is_on_floor() or remaining_coyote_time > 0:
-			velocity.y = MAX_JUMP_VELOCITY
+			velocity.y = MIN_JUMP_VELOCITY
+			charging_jump = JUMP_CHARGE_TIME
 		if is_on_wall_only():
-			velocity.y = MAX_JUMP_VELOCITY
+			velocity.y = MIN_JUMP_VELOCITY
 			velocity.x = WALL_JUMP_X * get_wall_normal().x
+			charging_jump = JUMP_CHARGE_TIME
 		was_on_floor = false
 		remaining_coyote_time = 0
 
 	var direction := Input.get_axis("left", "right")
 	if direction:
-		velocity.x += direction * ACCELERATION * delta
+		velocity.x += direction * VERTICAL_ACCELERATION * delta
 		velocity.x = clamp(velocity.x, MAX_SPEED * -1, MAX_SPEED)
 	else:
-		velocity.x = move_toward(velocity.x, 0, ACCELERATION * delta)
+		velocity.x = move_toward(velocity.x, 0, VERTICAL_ACCELERATION * delta)
 	
 	move_and_slide()
 	

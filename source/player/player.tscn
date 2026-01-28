@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://ckjqaf8lqjv0c"]
+[gd_scene format=3 uid="uid://ckjqaf8lqjv0c"]
 
 [ext_resource type="Script" uid="uid://rtvc5y8xd080" path="res://source/player/player.gd" id="1_jct2x"]
 [ext_resource type="Texture2D" uid="uid://u4epkmx61l2a" path="res://assets/player/jump.png" id="2_glqx2"]
@@ -73,15 +73,15 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="Player" type="CharacterBody2D"]
+[node name="Player" type="CharacterBody2D" unique_id=454135562]
 collision_mask = 14
 script = ExtResource("1_jct2x")
 
-[node name="PlayerCollision" type="CollisionShape2D" parent="."]
+[node name="PlayerCollision" type="CollisionShape2D" parent="." unique_id=500703265]
 position = Vector2(-2, 8)
 shape = SubResource("CapsuleShape2D_u10tu")
 
-[node name="PlayerAnimation" type="AnimatedSprite2D" parent="."]
+[node name="PlayerAnimation" type="AnimatedSprite2D" parent="." unique_id=308749310]
 position = Vector2(0, -2)
 sprite_frames = SubResource("SpriteFrames_y2357")
 animation = &"jumping"
