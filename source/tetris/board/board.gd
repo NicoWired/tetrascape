@@ -3,8 +3,12 @@ extends Node2D
 
 signal player_entered_piece
 
-const PIECE_X_OFFSET: int = 3
+const PIECE_SPAWN_OFFSET: Vector2i = Vector2i(3,-1)
+const DAS: float = 0.3
+const REPEAT_RATE: float = 0.05
 
+var das_cd: float = DAS
+var autorepeat_cd: float = REPEAT_RATE
 var current_piece_position: Vector2i = Vector2i(0,0)
 var current_piece: Piece
 var board_state: Dictionary
@@ -26,9 +30,17 @@ func _process(delta: float) -> void:
 
 	if Input.is_action_just_pressed("left"):
 		try_to_move(Vector2i.LEFT)
+	elif Input.is_action_pressed("left"):
+		apply_das(Vector2i.LEFT, delta)
 	
 	if Input.is_action_just_pressed("right"):
 		try_to_move(Vector2i.RIGHT)
+	elif Input.is_action_pressed("right"):
+		apply_das(Vector2i.RIGHT, delta)
+	
+	if Input.is_action_just_released("left") or Input.is_action_just_released("right"):
+		das_cd = DAS
+		autorepeat_cd = REPEAT_RATE
 	
 	if Input.is_action_pressed("down"):
 		gravity_multiplier = 3
@@ -98,15 +110,25 @@ func move_piece(new_coords: Array[Vector2i]) -> void:
 	for square: PieceSquare in current_piece.squares:
 		square.position = (new_coords[i]) * GameConfig.TILE_SIZE
 		i += 1
+
+func apply_das(direction: Vector2i, delta: float) -> void:
+	das_cd -= delta
+	if das_cd <= 0:
+		autorepeat_cd -= delta
+		if autorepeat_cd <= 0:
+			autorepeat_cd = REPEAT_RATE
+			try_to_move(direction)
 #endregion
 
 #region piece life cycle
 func spawn_piece(piece_type: PieceData.PIECE_SHAPE = PieceData.PIECE_SHAPE.R) -> void:
+	das_cd = DAS
+	autorepeat_cd = REPEAT_RATE
 	current_piece_position = Vector2i.ZERO
 	current_piece = Piece.new(piece_type)
 	current_piece.player_entered.connect(func(): player_entered_piece.emit())
 	add_child(current_piece)
-	try_to_move(Vector2i(PIECE_X_OFFSET, 0))
+	try_to_move(PIECE_SPAWN_OFFSET)
 
 func bottom_reached() -> void:
 	for square: PieceSquare in current_piece.squares:
