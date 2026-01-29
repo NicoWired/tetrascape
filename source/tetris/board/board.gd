@@ -9,6 +9,7 @@ var current_piece_position: Vector2i = Vector2i(0,0)
 var current_piece: Piece
 var board_state: Dictionary
 var remaining_gravity_cd: float
+var gravity_multiplier: float = 1
 @onready var squares: Node2D = $Squares
 
 
@@ -28,6 +29,11 @@ func _process(delta: float) -> void:
 	
 	if Input.is_action_just_pressed("right"):
 		try_to_move(Vector2i.RIGHT)
+	
+	if Input.is_action_pressed("down"):
+		gravity_multiplier = 3
+	else:
+		gravity_multiplier = 1
 
 	if Input.is_action_just_pressed("rotate_cw"):
 		try_to_rotate(1)
@@ -37,15 +43,12 @@ func _process(delta: float) -> void:
 	#endregion
 	
 	# apply gravity
-	remaining_gravity_cd -= delta #* gravity_multiplier
+	remaining_gravity_cd -= delta * gravity_multiplier
 	if remaining_gravity_cd <= 0:
 		remaining_gravity_cd = GameConfig.GRAVITY_CD
-		var new_coords: Array[Vector2i] = current_piece.get_move_coords(Vector2i.DOWN)
-		if check_valid_coords(new_coords):
-			current_piece_position += Vector2i.DOWN
-			current_piece.move_piece(new_coords)
-		else:
+		if not try_to_move(Vector2i.DOWN):
 			bottom_reached()
+
 
 func initialize() -> void:
 	remaining_gravity_cd = GameConfig.GRAVITY_CD
@@ -75,18 +78,26 @@ func check_valid_coords(coords: Array[Vector2i]) -> bool:
 			return false
 	return true
 
-func try_to_move(direction: Vector2i) -> void:
+func try_to_move(direction: Vector2i) -> bool:
 	var new_coords: Array[Vector2i] = current_piece.get_move_coords(direction)
 	if check_valid_coords(new_coords):
 		current_piece_position += direction
-		current_piece.move_piece(new_coords)
+		move_piece(new_coords)
+		return true
+	return false
 
-func try_to_rotate(direction: int) -> void:
+func try_to_rotate(direction: int) -> bool:
 	var new_coords: Array[Vector2i] = current_piece.get_rotation_coords(direction, current_piece_position)
 	if check_valid_coords(new_coords):
 		current_piece.rotate_piece(new_coords, direction)
+		return true
+	return false
 
-	
+func move_piece(new_coords: Array[Vector2i]) -> void:
+	var i: int = 0
+	for square: PieceSquare in current_piece.squares:
+		square.position = (new_coords[i]) * GameConfig.TILE_SIZE
+		i += 1
 #endregion
 
 #region piece life cycle
@@ -95,6 +106,7 @@ func spawn_piece(piece_type: PieceData.PIECE_SHAPE = PieceData.PIECE_SHAPE.R) ->
 	current_piece = Piece.new(piece_type)
 	current_piece.player_entered.connect(func(): player_entered_piece.emit())
 	add_child(current_piece)
+	try_to_move(Vector2i(PIECE_X_OFFSET, 0))
 
 func bottom_reached() -> void:
 	for square: PieceSquare in current_piece.squares:
@@ -120,7 +132,7 @@ func hard_drop() -> void:
 	var target_coords = find_bottom()
 	var tiles_down: int = int(current_piece.squares[0].position.y / GameConfig.TILE_SIZE)
 	current_piece_position += Vector2i(0, tiles_down)
-	current_piece.move_piece(target_coords)
+	move_piece(target_coords)
 	bottom_reached()
 #endregion
 

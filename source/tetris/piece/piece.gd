@@ -1,7 +1,6 @@
 class_name Piece
 extends Node2D
 
-signal piece_moved
 signal player_entered
 
 var piece_res: PieceData
@@ -55,17 +54,8 @@ func rotate_piece(new_coords: Array[Vector2i], direction: int) -> void:
 		i += 1
 #endregion
 
-#region Movement
-func move_piece(new_coords: Array[Vector2i]) -> void:
-	var i: int = 0
-	for square: PieceSquare in squares:
-		square.position = new_coords[i] * GameConfig.TILE_SIZE
-		i += 1
-	piece_moved.emit()
-
 func get_move_coords(direction: Vector2i) -> Array[Vector2i]:
 	var new_coords: Array[Vector2i]
 	for square: PieceSquare in squares:
 		new_coords.append(Vector2i(square.position / GameConfig.TILE_SIZE) + direction)
 	return new_coords
-#endregion
