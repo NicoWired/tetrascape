@@ -1,19 +1,19 @@
-[gd_scene load_steps=5 format=3 uid="uid://bfhfd2keju386"]
+[gd_scene format=3 uid="uid://bfhfd2keju386"]
 
 [ext_resource type="Script" uid="uid://dgvjqt2c58o60" path="res://source/levels/level.gd" id="1_niqk7"]
-[ext_resource type="PackedScene" uid="uid://cb4igblj6e2dt" path="res://source/tetris/board/board.tscn" id="2_ogqbx"]
+[ext_resource type="PackedScene" uid="uid://cb4igblj6e2dt" path="res://source/puzzle/board/board.tscn" id="2_ogqbx"]
 [ext_resource type="PackedScene" uid="uid://ckjqaf8lqjv0c" path="res://source/player/player.tscn" id="3_ogqbx"]
 [ext_resource type="PackedScene" uid="uid://1sabmrf8e66k" path="res://source/props/exit_door.tscn" id="4_epmhw"]
 
-[node name="TestLevel" type="Node2D"]
+[node name="TestLevel" type="Node2D" unique_id=1461556655]
 script = ExtResource("1_niqk7")
 
-[node name="Board" parent="." instance=ExtResource("2_ogqbx")]
+[node name="Board" parent="." unique_id=2043615883 instance=ExtResource("2_ogqbx")]
 metadata/_edit_lock_ = true
 
-[node name="Player" parent="." instance=ExtResource("3_ogqbx")]
+[node name="Player" parent="." unique_id=962344983 instance=ExtResource("3_ogqbx")]
 position = Vector2(-43, 8)
 metadata/_edit_lock_ = true
 
-[node name="ExitDoor" parent="." instance=ExtResource("4_epmhw")]
+[node name="ExitDoor" parent="." unique_id=1530803056 instance=ExtResource("4_epmhw")]
 metadata/_edit_lock_ = true

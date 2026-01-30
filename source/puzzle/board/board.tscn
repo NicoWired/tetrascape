@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://cb4igblj6e2dt"]
+
+[ext_resource type="Script" uid="uid://ultenaxv7ed" path="res://source/puzzle/board/board.gd" id="1_fugdb"]
+
+[node name="Board" type="Node2D" unique_id=2019408534]
+script = ExtResource("1_fugdb")
+
+[node name="Squares" type="Node2D" parent="." unique_id=635171943]

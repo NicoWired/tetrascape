@@ -14,7 +14,7 @@ var frames_player_inside: int = -1
 
 
 static func create(input_texture: Texture2D) -> PieceSquare:
-	var own_scene = preload("res://source/tetris/square/piece_square.tscn")
+	var own_scene = preload("res://source/puzzle/square/piece_square.tscn")
 	return own_scene.instantiate().initialize(input_texture)
 
 func initialize(input_texture: Texture2D) -> PieceSquare:

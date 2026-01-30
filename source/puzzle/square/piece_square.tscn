@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://dv0j22pbpa4j5"]
+
+[ext_resource type="Script" uid="uid://bwbbiolgegouk" path="res://source/puzzle/square/piece_square.gd" id="1_opd2k"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pwv8o"]
+
+[node name="PieceSquare" type="StaticBody2D" unique_id=123601145]
+collision_layer = 2
+script = ExtResource("1_opd2k")
+
+[node name="SquareSprite" type="Sprite2D" parent="." unique_id=912601951]
+centered = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=873000976]
+shape = SubResource("RectangleShape2D_pwv8o")
+
+[node name="PieceArea" type="Area2D" parent="." unique_id=1705831581]
+collision_layer = 2
