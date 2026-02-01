@@ -3,7 +3,7 @@ extends Sprite2D
 
 signal player_entered
 
-const DOOR_SHAPE_SCALE: float = 0.5
+const DOOR_SHAPE_SCALE: float = 0.7
 
 @onready var door_area: Area2D = $DoorArea
 @onready var door_collision_shape: CollisionShape2D = $DoorArea/DoorCollisionShape
@@ -31,7 +31,8 @@ func _ready() -> void:
 	var door_values = DoorValues.new()
 	door_values.flag_changed.connect(check_player_entered)
 	
-	texture.size = Vector2(GameConfig.TILE_SIZE, GameConfig.TILE_SIZE)
+	scale = Vector2(GameConfig.TILE_SIZE / get_rect().end.x, GameConfig.TILE_SIZE / get_rect().end.x)
+	
 	door_collision_shape.shape.size = Vector2(
 		GameConfig.TILE_SIZE * DOOR_SHAPE_SCALE, GameConfig.TILE_SIZE * DOOR_SHAPE_SCALE)
 	var door_area_br: Area2D = door_area.duplicate()
@@ -47,9 +48,12 @@ func _ready() -> void:
 		(GameConfig.TILE_SIZE - GameConfig.TILE_SIZE * DOOR_SHAPE_SCALE)
 		)
 	var pos_offset: Vector2 = Vector2(
-		GameConfig.TILE_SIZE * DOOR_SHAPE_SCALE / 2.0, GameConfig.TILE_SIZE * DOOR_SHAPE_SCALE / 2.0)
+		GameConfig.TILE_SIZE * DOOR_SHAPE_SCALE / 2.0,
+		GameConfig.TILE_SIZE * DOOR_SHAPE_SCALE / 2.0 + (get_rect().end.y - GameConfig.TILE_SIZE)
+		)
 	door_area.position += pos_offset
 	door_area_br.position += pos_offset
+	door_area_br.position.x += get_rect().end.x - GameConfig.TILE_SIZE
 	add_child(door_area_br)
 
 func check_player_entered(values: DoorValues) -> void:
