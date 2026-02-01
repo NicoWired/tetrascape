@@ -2,7 +2,7 @@ class_name PlayerConfig
 extends Resource
 
 # movement constants
-@export var values: Dictionary[StringName,Variant] = {
+@export var values: Dictionary[StringName,float] = {
 	&"vertical_acceleration": 1000,
 	&"max_speed": 350,
 	&"min_jump_velocity": -300,
@@ -11,6 +11,7 @@ extends Resource
 	&"wall_jump_x": 350,
 	&"wall_friction": 0.3,
 	&"coyote_time": 0.03,
+	&"fall_speed_multiplier": 1,
 	&"base_size": 64,
 }
 

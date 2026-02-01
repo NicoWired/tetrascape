@@ -49,7 +49,10 @@ func _physics_process(delta: float) -> void:
 		if state == States.WALL and velocity.y > 0:
 			velocity += get_gravity() * delta * cfg.values.wall_friction
 		else:
-			velocity += get_gravity() * delta
+			if velocity.y > 0:
+				velocity += get_gravity() * cfg.values.fall_speed_multiplier * delta
+			else:
+				velocity += get_gravity() * delta
 	else:
 		velocity.y = 0
 		remaining_coyote_time = move_toward(remaining_coyote_time, 0, delta)
