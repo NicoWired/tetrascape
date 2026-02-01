@@ -30,6 +30,9 @@ func _ready() -> void:
 	exit_door.player_entered.connect(game_over)
 	exit_door.global_position = EXIT_DOOR_COORDS
 	initialize()
+	
+	_dev_tools()
+
 
 func initialize() -> void:
 	player.position = PLAYER_SPAWN_COORDS
@@ -54,3 +57,8 @@ func create_boundary(start_point: Vector2i, end_point: Vector2i) -> void:
 
 func game_over() -> void:
 	call_deferred("initialize")
+
+func _dev_tools() -> void:
+	var cc: ControlCutre = preload("res://source/dev/controlcutre.tscn").instantiate()
+	cc.position = Vector2i(GameConfig.TILE_SIZE * GameConfig.BOARD_SIZE.x + 16, 48)
+	add_child(cc)

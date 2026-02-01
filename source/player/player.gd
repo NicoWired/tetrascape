@@ -8,20 +8,7 @@ enum States {
 	JUMPING
 }
 
-# movement constants
-const VERTICAL_ACCELERATION: int = 1000
-const MAX_SPEED: int = 350
-const MIN_JUMP_VELOCITY: int = -300
-const JUMP_CHARGE_TIME: float = 0.5
-const JUMP_INCREMENT: int = 400
-const WALL_JUMP_X: int = 350
-const WALL_FRICTION: float = 0.3
-const COYOTE_TIME: float = 0.03
-
-# character size
-const BASE_SIZE: int = 64
-const SCALE_SIZE: float = float(GameConfig.TILE_SIZE) / BASE_SIZE
-
+var cfg: PlayerConfig = PlayerConfig.new()
 var charging_jump: float = 0
 var remaining_coyote_time: float = 0
 var was_on_floor: bool = false
@@ -44,7 +31,7 @@ var state: States:
 
 
 func _ready() -> void:
-	scale = Vector2(SCALE_SIZE, SCALE_SIZE)
+	scale = Vector2(cfg.values.scale_size, cfg.values.scale_size)
 	GlobalStates.toggled_changed.connect(on_toggle_changed)
 	initialize()
 
@@ -55,12 +42,12 @@ func _physics_process(delta: float) -> void:
 	# activate coyote time
 	if was_on_floor and not is_on_floor():
 		was_on_floor = false
-		remaining_coyote_time = COYOTE_TIME
+		remaining_coyote_time = cfg.values.coyote_time
 
 	# apply gravity
 	if remaining_coyote_time <= 0:
 		if state == States.WALL and velocity.y > 0:
-			velocity += get_gravity() * delta * WALL_FRICTION
+			velocity += get_gravity() * delta * cfg.values.wall_friction
 		else:
 			velocity += get_gravity() * delta
 	else:
@@ -68,27 +55,27 @@ func _physics_process(delta: float) -> void:
 		remaining_coyote_time = move_toward(remaining_coyote_time, 0, delta)
 	
 	if Input.is_action_pressed("jump") and charging_jump > 0:
-		velocity.y -= JUMP_INCREMENT * delta
+		velocity.y -= cfg.values.jump_increment * delta
 	
 	charging_jump = move_toward(charging_jump, 0, delta)
 	
 	if Input.is_action_just_pressed("jump"):
 		if is_on_floor() or remaining_coyote_time > 0:
-			velocity.y = MIN_JUMP_VELOCITY
-			charging_jump = JUMP_CHARGE_TIME
+			velocity.y = cfg.values.min_jump_velocity
+			charging_jump = cfg.values.jump_charge_time
 		if is_on_wall_only():
-			velocity.y = MIN_JUMP_VELOCITY
-			velocity.x = WALL_JUMP_X * get_wall_normal().x
-			charging_jump = JUMP_CHARGE_TIME
+			velocity.y = cfg.values.min_jump_velocity
+			velocity.x = cfg.values.wall_jump_x * get_wall_normal().x
+			charging_jump = cfg.values.jump_charge_time
 		was_on_floor = false
 		remaining_coyote_time = 0
 
 	var direction := Input.get_axis("left", "right")
 	if direction:
-		velocity.x += direction * VERTICAL_ACCELERATION * delta
-		velocity.x = clamp(velocity.x, MAX_SPEED * -1, MAX_SPEED)
+		velocity.x += direction * cfg.values.vertical_acceleration * delta
+		velocity.x = clamp(velocity.x, cfg.values.max_speed * -1, cfg.values.max_speed)
 	else:
-		velocity.x = move_toward(velocity.x, 0, VERTICAL_ACCELERATION * delta)
+		velocity.x = move_toward(velocity.x, 0, cfg.values.vertical_acceleration * delta)
 	
 	move_and_slide()
 	
