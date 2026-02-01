@@ -9,17 +9,10 @@ script = ExtResource("1_gichy")
 [node name="Polygon2D" type="Polygon2D" parent="." unique_id=254691463]
 color = Color(0.6666667, 0.6666667, 0.6666667, 1)
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1630678006]
-visible = false
-texture_repeat = 2
-texture = ExtResource("2_u2g1b")
-
 [node name="TextureRect" type="TextureRect" parent="." unique_id=1845703902]
-offset_right = 40.0
-offset_bottom = 40.0
 scale = Vector2(0.5, 0.5)
 size_flags_horizontal = 3
 size_flags_vertical = 3
 texture = ExtResource("2_u2g1b")
-expand_mode = 5
+expand_mode = 1
 stretch_mode = 1
