@@ -4,9 +4,13 @@ extends Node2D
 const EXIT_DOOR_COORDS: Vector2i = Vector2i(4,2) * GameConfig.TILE_SIZE
 const PLAYER_SPAWN_COORDS: Vector2i = Vector2i(4,19) * GameConfig.TILE_SIZE
 
+@export var countdown_time: int = 180
+
 @onready var exit_door: ExitDoor = $ExitDoor
 @onready var player: Player = $Player
 @onready var board: Board = $Board
+@onready var countdown: Timer = $Countdown
+@onready var hud: GameHUD = $HUD
 
 
 func _ready() -> void:
@@ -26,6 +30,14 @@ func _ready() -> void:
 		Vector2i(GameConfig.BOARD_SIZE.x * GameConfig.TILE_SIZE,GameConfig.BOARD_SIZE.y * GameConfig.TILE_SIZE)
 	)
 	
+	# setup timer
+	countdown.wait_time = 1
+	countdown.one_shot = false
+	countdown.timeout.connect(on_countdown_tick)
+	hud.countdown_label.text = str(countdown_time)
+	countdown.start()
+	
+	
 	board.player_entered_piece.connect(game_over)
 	exit_door.player_entered.connect(game_over)
 	exit_door.global_position = EXIT_DOOR_COORDS
@@ -38,7 +50,6 @@ func initialize() -> void:
 	player.position = PLAYER_SPAWN_COORDS
 	board.initialize()
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
 	if Input.is_action_just_pressed("toggle"):
 		GlobalStates.toggle = not GlobalStates.toggle
@@ -62,3 +73,9 @@ func _dev_tools() -> void:
 	var cc: ControlCutre = preload("res://source/dev/controlcutre.tscn").instantiate()
 	cc.position = Vector2i(GameConfig.TILE_SIZE * GameConfig.BOARD_SIZE.x + 16, 48)
 	add_child(cc)
+
+func on_countdown_tick() -> void:
+	countdown_time -= 1
+	hud.countdown_label.text = str(countdown_time)
+	if countdown_time <= 0:
+		game_over()

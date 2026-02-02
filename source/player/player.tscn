@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://ckjqaf8lqjv0c"]
 
 [ext_resource type="Script" uid="uid://rtvc5y8xd080" path="res://source/player/player.gd" id="1_jct2x"]
+[ext_resource type="Texture2D" uid="uid://dtm5hbnmyu3rf" path="res://assets/player/idle.png" id="2_favdl"]
 [ext_resource type="Texture2D" uid="uid://u4epkmx61l2a" path="res://assets/player/jump.png" id="2_glqx2"]
 [ext_resource type="Texture2D" uid="uid://dmdopea31h84y" path="res://assets/player/running_anim.png" id="2_xim07"]
 [ext_resource type="Texture2D" uid="uid://bnqng0dak2cno" path="res://assets/player/wall-hold.png" id="4_favdl"]
@@ -8,10 +9,6 @@
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_u10tu"]
 radius = 20.0
 height = 50.0
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_y2357"]
-atlas = ExtResource("2_xim07")
-region = Rect2(0, 0, 96, 96)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_u10tu"]
 atlas = ExtResource("2_xim07")
@@ -33,7 +30,7 @@ region = Rect2(288, 0, 96, 96)
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_y2357")
+"texture": ExtResource("2_favdl")
 }],
 "loop": true,
 "name": &"idle",
@@ -84,4 +81,4 @@ shape = SubResource("CapsuleShape2D_u10tu")
 [node name="PlayerAnimation" type="AnimatedSprite2D" parent="." unique_id=308749310]
 position = Vector2(0, -2)
 sprite_frames = SubResource("SpriteFrames_y2357")
-animation = &"jumping"
+animation = &"idle"
