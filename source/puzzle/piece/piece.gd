@@ -51,6 +51,10 @@ func rotate_piece(new_coords: Array[Vector2i], direction: int) -> void:
 	var i = 0
 	for square: PieceSquare in squares:
 		square.position = new_coords[i] * GameConfig.TILE_SIZE
+		if direction == 1:
+			square.rotate_spikes_cw()
+		elif direction == -1:
+			square.rotate_spikes_cc()
 		i += 1
 #endregion
 

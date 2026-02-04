@@ -1,6 +1,8 @@
 [gd_scene format=3 uid="uid://dv0j22pbpa4j5"]
 
 [ext_resource type="Script" uid="uid://bwbbiolgegouk" path="res://source/puzzle/square/piece_square.gd" id="1_opd2k"]
+[ext_resource type="PackedScene" uid="uid://c2bnou8kg4crr" path="res://source/props/spikes/spikes.tscn" id="2_b0cwu"]
+[ext_resource type="Texture2D" uid="uid://cmheipimrbrnc" path="res://assets/pieces/piece4.png" id="2_vnpuh"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_pwv8o"]
 
@@ -8,7 +10,30 @@
 collision_layer = 2
 script = ExtResource("1_opd2k")
 
+[node name="Spikes" type="Node2D" parent="." unique_id=722082361]
+
+[node name="SpikesTop" parent="Spikes" unique_id=1294788690 instance=ExtResource("2_b0cwu")]
+visible = false
+position = Vector2(3, -24)
+
+[node name="SpikesBottom" parent="Spikes" unique_id=1308545782 instance=ExtResource("2_b0cwu")]
+visible = false
+position = Vector2(74, 101)
+rotation = -3.1415925
+
+[node name="SpikesLeft" parent="Spikes" unique_id=1435497089 instance=ExtResource("2_b0cwu")]
+visible = false
+position = Vector2(-24, 74)
+rotation = 4.712389
+
+[node name="SpikesRight" parent="Spikes" unique_id=1388717077 instance=ExtResource("2_b0cwu")]
+visible = false
+position = Vector2(101, 3)
+rotation = 1.5707964
+
 [node name="SquareSprite" type="Sprite2D" parent="." unique_id=912601951]
+z_index = 2
+texture = ExtResource("2_vnpuh")
 centered = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=873000976]

@@ -11,6 +11,11 @@ var frames_player_inside: int = -1
 @onready var collision_shape_2d: CollisionShape2D = $CollisionShape2D
 @onready var square_sprite: Sprite2D = $SquareSprite
 @onready var piece_area: Area2D = $PieceArea
+@onready var spikes: Node2D = $Spikes
+@onready var spikes_top: Spikes = $Spikes/SpikesTop
+@onready var spikes_bottom: Spikes = $Spikes/SpikesBottom
+@onready var spikes_left: Spikes = $Spikes/SpikesLeft
+@onready var spikes_right: Spikes = $Spikes/SpikesRight
 
 
 static func create(input_texture: Texture2D) -> PieceSquare:
@@ -26,11 +31,15 @@ func _ready() -> void:
 	collision_shape_2d.shape.size = Vector2i(GameConfig.TILE_SIZE, GameConfig.TILE_SIZE)
 	collision_shape_2d.position = Vector2(GameConfig.TILE_SIZE / 2.0, GameConfig.TILE_SIZE / 2.0)
 	square_sprite.texture = square_texture
-	square_sprite.scale = Vector2(GameConfig.TILE_SIZE,GameConfig.TILE_SIZE) / square_sprite.texture.get_size()
+	#square_sprite.scale = Vector2(GameConfig.TILE_SIZE,GameConfig.TILE_SIZE) / square_sprite.texture.get_size()
+	scale = Vector2(GameConfig.TILE_SIZE,GameConfig.TILE_SIZE) / square_sprite.texture.get_size()
 	
 	var collision_shape_2d_area: CollisionShape2D = collision_shape_2d.duplicate()
 	piece_area.body_entered.connect(on_body_entered)
 	piece_area.add_child(collision_shape_2d_area)
+	
+	enable_spikes()
+	
 
 func _physics_process(_delta) -> void:
 	# this should prevent the signal from triggering when the player overlaps for only one frame
@@ -49,3 +58,32 @@ func _physics_process(_delta) -> void:
 func on_body_entered(body) -> void:
 	if body is Player:
 		frames_player_inside = MAX_FRAMES_PLAYER_INSIDE
+
+#region spikes
+func current_spikes_snapshot() -> Dictionary[StringName,bool]:
+	return {
+		&"top": spikes_top.visible,
+		&"bot": spikes_bottom.visible,
+		&"left": spikes_left.visible,
+		&"right": spikes_right.visible,
+	}
+
+func rotate_spikes_cw() -> void:
+	var old_spikes: Dictionary[StringName,bool] = current_spikes_snapshot()
+	spikes_bottom.visible = old_spikes["right"]
+	spikes_left.visible = old_spikes["bot"]
+	spikes_top.visible = old_spikes["left"]
+	spikes_right.visible = old_spikes["top"]
+
+func rotate_spikes_cc() -> void:
+	var old_spikes: Dictionary[StringName,bool] = current_spikes_snapshot()
+	spikes_bottom.visible = old_spikes["left"]
+	spikes_left.visible = old_spikes["top"]
+	spikes_top.visible = old_spikes["right"]
+	spikes_right.visible = old_spikes["bot"]
+
+func enable_spikes(chance: float = 0.5) -> void:
+	for spike in spikes.get_children():
+		if randf() > chance:
+			spike.visible = true
+#endregion
