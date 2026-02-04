@@ -22,12 +22,15 @@ collision_layer = 2
 
 [node name="Spike1" type="CollisionShape2D" parent="Sprite/Collision" unique_id=759159651]
 shape = SubResource("ConvexPolygonShape2D_3b0lk")
+disabled = true
 
 [node name="Spike2" type="CollisionShape2D" parent="Sprite/Collision" unique_id=124102731]
 shape = SubResource("ConvexPolygonShape2D_nnjg2")
+disabled = true
 
 [node name="Spike3" type="CollisionShape2D" parent="Sprite/Collision" unique_id=1342703761]
 shape = SubResource("ConvexPolygonShape2D_0tsnw")
+disabled = true
 
 [node name="SpikePoly1" type="Polygon2D" parent="." unique_id=1561903950]
 visible = false

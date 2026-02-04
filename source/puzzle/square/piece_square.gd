@@ -31,8 +31,9 @@ func _ready() -> void:
 	collision_shape_2d.shape.size = Vector2i(GameConfig.TILE_SIZE, GameConfig.TILE_SIZE)
 	collision_shape_2d.position = Vector2(GameConfig.TILE_SIZE / 2.0, GameConfig.TILE_SIZE / 2.0)
 	square_sprite.texture = square_texture
-	#square_sprite.scale = Vector2(GameConfig.TILE_SIZE,GameConfig.TILE_SIZE) / square_sprite.texture.get_size()
-	scale = Vector2(GameConfig.TILE_SIZE,GameConfig.TILE_SIZE) / square_sprite.texture.get_size()
+	square_sprite.scale = Vector2(GameConfig.TILE_SIZE,GameConfig.TILE_SIZE) / square_sprite.texture.get_size()
+	spikes.scale = Vector2(GameConfig.TILE_SIZE,GameConfig.TILE_SIZE) / square_sprite.texture.get_size()
+	#scale = Vector2(GameConfig.TILE_SIZE,GameConfig.TILE_SIZE) / square_sprite.texture.get_size()
 	
 	var collision_shape_2d_area: CollisionShape2D = collision_shape_2d.duplicate()
 	piece_area.body_entered.connect(on_body_entered)
@@ -70,21 +71,21 @@ func current_spikes_snapshot() -> Dictionary[StringName,bool]:
 
 func rotate_spikes_cw() -> void:
 	var old_spikes: Dictionary[StringName,bool] = current_spikes_snapshot()
-	spikes_bottom.visible = old_spikes["right"]
-	spikes_left.visible = old_spikes["bot"]
-	spikes_top.visible = old_spikes["left"]
-	spikes_right.visible = old_spikes["top"]
+	spikes_bottom.enable(old_spikes["right"])
+	spikes_left.enable(old_spikes["bot"])
+	spikes_top.enable(old_spikes["left"])
+	spikes_right.enable(old_spikes["top"])
 
 func rotate_spikes_cc() -> void:
 	var old_spikes: Dictionary[StringName,bool] = current_spikes_snapshot()
-	spikes_bottom.visible = old_spikes["left"]
-	spikes_left.visible = old_spikes["top"]
-	spikes_top.visible = old_spikes["right"]
-	spikes_right.visible = old_spikes["bot"]
+	spikes_bottom.enable(old_spikes["left"])
+	spikes_left.enable(old_spikes["top"])
+	spikes_top.enable(old_spikes["right"])
+	spikes_right.enable(old_spikes["bot"])
 
-func enable_spikes(chance: float = 0.5) -> void:
+func enable_spikes(chance: float = 0.8) -> void:
 	for spike: Spikes in spikes.get_children():
 		spike.spikes_body_entered.connect(func(): player_entered.emit())
 		if randf() > chance:
-			spike.visible = true
+			spike.enable(true)
 #endregion

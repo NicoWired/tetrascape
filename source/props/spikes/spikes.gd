@@ -29,3 +29,9 @@ func _ready() -> void:
 func on_body_entered(body) -> void:
 	if body is Player:
 		spikes_body_entered.emit()
+
+func enable(enabled: bool) -> void:
+	spike_1.disabled = not enabled
+	spike_2.disabled = not enabled
+	spike_3.disabled = not enabled
+	visible = enabled
