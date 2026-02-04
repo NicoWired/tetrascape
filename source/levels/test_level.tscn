@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://dwyavyjqknnfe" path="res://source/levels/background/background.tscn" id="2_a1lpf"]
 [ext_resource type="PackedScene" uid="uid://cb4igblj6e2dt" path="res://source/puzzle/board/board.tscn" id="2_ogqbx"]
 [ext_resource type="PackedScene" uid="uid://ckjqaf8lqjv0c" path="res://source/player/player.tscn" id="3_ogqbx"]
-[ext_resource type="PackedScene" uid="uid://1sabmrf8e66k" path="res://source/props/exit_door.tscn" id="4_epmhw"]
+[ext_resource type="PackedScene" uid="uid://1sabmrf8e66k" path="res://source/props/exit_door/exit_door.tscn" id="4_epmhw"]
 [ext_resource type="PackedScene" uid="uid://b3wad366enhb7" path="res://source/GUI/hud.tscn" id="6_eeevt"]
 
 [node name="TestLevel" type="Node2D" unique_id=1461556655]
