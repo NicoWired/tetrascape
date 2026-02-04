@@ -83,7 +83,8 @@ func rotate_spikes_cc() -> void:
 	spikes_right.visible = old_spikes["bot"]
 
 func enable_spikes(chance: float = 0.5) -> void:
-	for spike in spikes.get_children():
+	for spike: Spikes in spikes.get_children():
+		spike.spikes_body_entered.connect(func(): player_entered.emit())
 		if randf() > chance:
 			spike.visible = true
 #endregion
