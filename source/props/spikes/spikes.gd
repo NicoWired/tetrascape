@@ -25,10 +25,17 @@ func _ready() -> void:
 	spike_poly_3.queue_free()
 
 	collision.body_entered.connect(on_body_entered)
+	collision.body_exited.connect(on_body_exited)
 	
 func on_body_entered(body) -> void:
 	if body is Player:
 		spikes_body_entered.emit()
+	if body is PieceSquare:
+		modulate = Color(1,1,1,0)
+
+func on_body_exited(body) -> void:
+	if body is PieceSquare:
+		modulate = Color(1,1,1,1)
 
 func enable(enabled: bool) -> void:
 	spike_1.disabled = not enabled

@@ -88,6 +88,7 @@ jump={
 2d_physics/layer_2="Pieces"
 2d_physics/layer_3="Boundaries"
 2d_physics/layer_4="Exit"
+2d_physics/layer_5="Ghost"
 
 [rendering]
 

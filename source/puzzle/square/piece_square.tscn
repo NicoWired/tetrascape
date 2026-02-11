@@ -32,7 +32,6 @@ position = Vector2(101, 3)
 rotation = 1.5707964
 
 [node name="SquareSprite" type="Sprite2D" parent="." unique_id=912601951]
-z_index = 2
 texture = ExtResource("2_vnpuh")
 centered = false
 

@@ -6,15 +6,22 @@ signal player_entered
 var piece_res: PieceData
 var current_position: int = 1
 var squares: Array[PieceSquare]
+var is_ghost: bool = false
 
 
-func _init(shape: PieceData.PIECE_SHAPE) -> void:
-	piece_res = PieceData.new(shape)
+static func create(input_shape: PieceData.PIECE_SHAPE) -> Piece:
+	var own_scene = preload("res://source/puzzle/piece/piece.tscn")
+	return own_scene.instantiate().initiate(input_shape)
+
+func initiate(input_shape: PieceData.PIECE_SHAPE) -> Piece:
+	piece_res = PieceData.new(input_shape)
+	return self
 
 func _ready() -> void:
-	piece_res.initialize()
-	create_piece(piece_res.matrix[current_position], Vector2i.ZERO)
-
+	if not is_ghost:
+		piece_res.initialize()
+		create_piece(piece_res.matrix[current_position], Vector2i.ZERO)
+	
 func create_piece(coordinates: Array[Vector2i], board_position: Vector2i) -> void:
 	for coord: Vector2i in coordinates:
 		var piece_square := PieceSquare.create(piece_res.piece_texture)
@@ -63,3 +70,24 @@ func get_move_coords(direction: Vector2i) -> Array[Vector2i]:
 	for square: PieceSquare in squares:
 		new_coords.append(Vector2i(square.position / GameConfig.TILE_SIZE) + direction)
 	return new_coords
+	
+#func ghost() -> Piece:
+	#assert(is_node_ready(), "Can't clone piece before running ready")
+	#var ghost_piece: Piece = Piece.new(piece_res.piece_shape)
+	#ghost_piece.piece_res = piece_res
+	#ghost_piece.is_ghost = true
+	#for square: PieceSquare in squares:
+		#var new_square = PieceSquare.create(piece_res.piece_texture)
+		#new_square.is_ghost = true
+		#new_square.position = square.position
+		#new_square.rng.seed = square.rng.seed
+		#ghost_piece.squares.append(new_square)
+		#new_square.collision_mask = 0
+		#ghost_piece.add_child(new_square)
+	#ghost_piece.modulate = Color(1,1,1,0.5)
+	#return ghost_piece
+
+func ghost() -> void:
+	modulate = Color(1,1,1,0.5)
+	for square: PieceSquare in get_children():
+		square.is_ghost = true

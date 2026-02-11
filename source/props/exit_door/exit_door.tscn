@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://1sabmrf8e66k"]
 
 [ext_resource type="Texture2D" uid="uid://dr4ecq0fhkprr" path="res://assets/props/door.png" id="1_qg7v3"]
-[ext_resource type="Script" uid="uid://cj3rod0fdlykv" path="res://source/props/exit_door/exit_door.gd" id="1_qjrui"]
+[ext_resource type="Script" path="res://source/props/exit_door/exit_door.gd" id="1_qjrui"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qjrui"]
 

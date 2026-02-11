@@ -7,6 +7,8 @@ const MAX_FRAMES_PLAYER_INSIDE: int = 3
 
 var square_texture: Texture2D
 var frames_player_inside: int = -1
+var rng = RandomNumberGenerator.new()
+var is_ghost: bool = false
 
 @onready var collision_shape_2d: CollisionShape2D = $CollisionShape2D
 @onready var square_sprite: Sprite2D = $SquareSprite
@@ -18,12 +20,13 @@ var frames_player_inside: int = -1
 @onready var spikes_right: Spikes = $Spikes/SpikesRight
 
 
-static func create(input_texture: Texture2D) -> PieceSquare:
+static func create(input_texture: Texture2D, input_rand_seed:int = randi()) -> PieceSquare:
 	var own_scene = preload("res://source/puzzle/square/piece_square.tscn")
-	return own_scene.instantiate().initialize(input_texture)
+	return own_scene.instantiate().initialize(input_texture, input_rand_seed)
 
-func initialize(input_texture: Texture2D) -> PieceSquare:
+func initialize(input_texture: Texture2D, input_rand_seed: int) -> PieceSquare:
 	square_texture = input_texture
+	rng.seed = input_rand_seed
 	return self
 
 func _ready() -> void:
@@ -33,11 +36,22 @@ func _ready() -> void:
 	square_sprite.texture = square_texture
 	square_sprite.scale = Vector2(GameConfig.TILE_SIZE,GameConfig.TILE_SIZE) / square_sprite.texture.get_size()
 	spikes.scale = Vector2(GameConfig.TILE_SIZE,GameConfig.TILE_SIZE) / square_sprite.texture.get_size()
-	#scale = Vector2(GameConfig.TILE_SIZE,GameConfig.TILE_SIZE) / square_sprite.texture.get_size()
 	
 	var collision_shape_2d_area: CollisionShape2D = collision_shape_2d.duplicate()
 	piece_area.body_entered.connect(on_body_entered)
 	piece_area.add_child(collision_shape_2d_area)
+	
+	if is_ghost:
+		piece_area.set_collision_layer_value(5, true)
+		piece_area.set_collision_layer_value(2, false)
+		piece_area.set_collision_mask_value(1, false)
+		piece_area.set_collision_mask_value(2, false)
+		piece_area.set_collision_mask_value(5, true)
+		for spike in spikes.get_children():
+			spike.collision.set_collision_mask_value(1, false)
+			spike.collision.set_collision_mask_value(2, false)
+			spike.collision.set_collision_layer_value(5, true)
+			spike.collision.set_collision_layer_value(2, false)
 	
 	enable_spikes()
 	
@@ -86,6 +100,6 @@ func rotate_spikes_cc() -> void:
 func enable_spikes(chance: float = 0.8) -> void:
 	for spike: Spikes in spikes.get_children():
 		spike.spikes_body_entered.connect(func(): player_entered.emit())
-		if randf() > chance:
+		if rng.randf() > chance:
 			spike.enable(true)
 #endregion

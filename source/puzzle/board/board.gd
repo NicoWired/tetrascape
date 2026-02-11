@@ -11,14 +11,11 @@ var das_cd: float = DAS
 var autorepeat_cd: float = REPEAT_RATE
 var current_piece_position: Vector2i = Vector2i(0,0)
 var current_piece: Piece
+var ghost_piece: Piece
 var board_state: Dictionary
 var remaining_gravity_cd: float
 var gravity_multiplier: float = 1
 @onready var squares: Node2D = $Squares
-
-
-func _ready() -> void:
-	initialize()
 
 func _process(delta: float) -> void:
 	if not GlobalStates.toggle:
@@ -125,10 +122,15 @@ func spawn_piece(piece_type: PieceData.PIECE_SHAPE = PieceData.PIECE_SHAPE.R) ->
 	das_cd = DAS
 	autorepeat_cd = REPEAT_RATE
 	current_piece_position = Vector2i.ZERO
-	current_piece = Piece.new(piece_type)
+	current_piece = Piece.create(piece_type)
 	current_piece.player_entered.connect(func(): player_entered_piece.emit())
 	add_child(current_piece)
 	try_to_move(PIECE_SPAWN_OFFSET)
+	
+	ghost_piece = current_piece.duplicate()
+	ghost_piece.ghost()
+	add_child(ghost_piece)
+	
 
 func bottom_reached() -> void:
 	for square: PieceSquare in current_piece.squares:
