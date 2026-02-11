@@ -33,7 +33,6 @@ func _ready() -> void:
 	square_sprite.texture = square_texture
 	square_sprite.scale = Vector2(GameConfig.TILE_SIZE,GameConfig.TILE_SIZE) / square_sprite.texture.get_size()
 	spikes.scale = Vector2(GameConfig.TILE_SIZE,GameConfig.TILE_SIZE) / square_sprite.texture.get_size()
-	#scale = Vector2(GameConfig.TILE_SIZE,GameConfig.TILE_SIZE) / square_sprite.texture.get_size()
 	
 	var collision_shape_2d_area: CollisionShape2D = collision_shape_2d.duplicate()
 	piece_area.body_entered.connect(on_body_entered)

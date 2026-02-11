@@ -75,10 +75,10 @@ func _physics_process(delta: float) -> void:
 
 	var direction := Input.get_axis("left", "right")
 	if direction:
-		velocity.x += direction * cfg.values.vertical_acceleration * delta
+		velocity.x += direction * cfg.values.horizontal_acceleration * delta
 		velocity.x = clamp(velocity.x, cfg.values.max_speed * -1, cfg.values.max_speed)
 	else:
-		velocity.x = move_toward(velocity.x, 0, cfg.values.vertical_acceleration * delta)
+		velocity.x = move_toward(velocity.x, 0, cfg.values.horizontal_deceleration * delta)
 	
 	move_and_slide()
 	

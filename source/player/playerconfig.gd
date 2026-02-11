@@ -3,7 +3,8 @@ extends Resource
 
 # movement constants
 @export var values: Dictionary[StringName,float] = {
-	&"vertical_acceleration": 1000,
+	&"horizontal_acceleration": 1000,
+	&"horizontal_deceleration": 1500,
 	&"max_speed": 350,
 	&"min_jump_velocity": -300,
 	&"jump_charge_time": 0.5,
