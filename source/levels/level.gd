@@ -6,6 +6,8 @@ const PLAYER_SPAWN_COORDS: Vector2i = Vector2i(4,19) * GameConfig.TILE_SIZE
 
 @export var countdown_time: int = 180
 
+var remaining_time: int
+
 @onready var exit_door: ExitDoor = $ExitDoor
 @onready var player: Player = $Player
 @onready var board: Board = $Board
@@ -37,7 +39,6 @@ func _ready() -> void:
 	hud.countdown_label.text = str(countdown_time)
 	countdown.start()
 	
-	
 	board.player_entered_piece.connect(game_over)
 	exit_door.player_entered.connect(game_over)
 	exit_door.global_position = EXIT_DOOR_COORDS
@@ -48,6 +49,7 @@ func _ready() -> void:
 
 func initialize() -> void:
 	player.position = PLAYER_SPAWN_COORDS
+	remaining_time = countdown_time
 	board.initialize()
 
 func _process(_delta: float) -> void:
@@ -75,7 +77,7 @@ func _dev_tools() -> void:
 	add_child(cc)
 
 func on_countdown_tick() -> void:
-	countdown_time -= 1
-	hud.countdown_label.text = str(countdown_time)
-	if countdown_time <= 0:
+	remaining_time -= 1
+	hud.countdown_label.text = str(remaining_time)
+	if remaining_time <= 0:
 		game_over()
