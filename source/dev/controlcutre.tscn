@@ -7,6 +7,12 @@ oversampling_override = 1.0
 position = Vector2i(0, 36)
 script = ExtResource("1_g0jlk")
 
-[node name="EntryList" type="VBoxContainer" parent="." unique_id=571301181]
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1798249108]
 offset_right = 40.0
 offset_bottom = 40.0
+
+[node name="PlayerEntryList" type="VBoxContainer" parent="HBoxContainer" unique_id=571301181]
+layout_mode = 2
+
+[node name="GlobalEntryList" type="VBoxContainer" parent="HBoxContainer" unique_id=1080423755]
+layout_mode = 2

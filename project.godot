@@ -24,6 +24,7 @@ config/icon="res://icon.svg"
 GameConfig="*res://source/autoloaders/game_config.gd"
 ExtResources="*res://source/autoloaders/ext_resources.gd"
 GlobalStates="*res://source/autoloaders/global_states.gd"
+DevGlobals="*uid://b4ie5ccym7q1a"
 
 [file_customization]
 

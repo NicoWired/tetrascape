@@ -69,11 +69,15 @@ func create_boundary(start_point: Vector2i, end_point: Vector2i) -> void:
 	add_child(boundary_body)
 
 func game_over() -> void:
-	call_deferred("initialize")
+	if not DevGlobals.god_mode.enabled:
+		call_deferred("initialize")
+	else:
+		DevGlobals.god_mode.total_deaths += 1
 
 func _dev_tools() -> void:
 	var cc: ControlCutre = preload("res://source/dev/controlcutre.tscn").instantiate()
 	cc.position = Vector2i(GameConfig.TILE_SIZE * GameConfig.BOARD_SIZE.x + 16, 48)
+	cc.min_size.x = 500
 	add_child(cc)
 
 func on_countdown_tick() -> void:
