@@ -13,6 +13,7 @@ var remaining_time: int
 @onready var board: Board = $Board
 @onready var countdown: Timer = $Countdown
 @onready var hud: GameHUD = $HUD
+@onready var laser: Laser = $Laser
 
 
 func _ready() -> void:
@@ -43,6 +44,8 @@ func _ready() -> void:
 	exit_door.player_entered.connect(game_over)
 	exit_door.global_position = EXIT_DOOR_COORDS
 	initialize()
+	
+	laser.laser_beam.player_collision.connect(game_over)
 	
 	_dev_tools()
 
