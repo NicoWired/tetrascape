@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://dhnh64caqae4g"]
+
+[ext_resource type="Script" uid="uid://cvekgkhonggnl" path="res://source/props/laser/laser.gd" id="1_bgnj8"]
+[ext_resource type="PackedScene" uid="uid://v742fgms0fx1" path="res://source/props/laser/laser_beam.tscn" id="2_hvi5u"]
+
+[node name="Laser" type="Node2D" unique_id=1902985551]
+script = ExtResource("1_bgnj8")
+
+[node name="LaserBeam" parent="." unique_id=59433645 instance=ExtResource("2_hvi5u")]

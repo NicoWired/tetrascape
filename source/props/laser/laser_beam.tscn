@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://v742fgms0fx1"]
+
+[ext_resource type="Script" uid="uid://cu2h65xkk78fh" path="res://source/props/laser/laser_beam.gd" id="1_tyqua"]
+
+[node name="LaserBeam" type="Node2D" unique_id=59433645]
+script = ExtResource("1_tyqua")
+
+[node name="LaserRayCast" type="RayCast2D" parent="." unique_id=2076087620]
+target_position = Vector2(5000, 0)
+collision_mask = 7
+
+[node name="LaserBody" type="Line2D" parent="." unique_id=397435631]
+default_color = Color(0.84313726, 0.10980392, 0.21960784, 1)

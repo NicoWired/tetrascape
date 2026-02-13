@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://ckjqaf8lqjv0c" path="res://source/player/player.tscn" id="3_ogqbx"]
 [ext_resource type="PackedScene" uid="uid://1sabmrf8e66k" path="res://source/props/exit_door/exit_door.tscn" id="4_epmhw"]
 [ext_resource type="PackedScene" uid="uid://b3wad366enhb7" path="res://source/GUI/hud.tscn" id="6_eeevt"]
+[ext_resource type="PackedScene" uid="uid://dhnh64caqae4g" path="res://source/props/laser/laser.tscn" id="7_j1evw"]
 
 [node name="TestLevel" type="Node2D" unique_id=1461556655]
 script = ExtResource("1_niqk7")
@@ -27,3 +28,6 @@ metadata/_edit_lock_ = true
 [node name="HUD" parent="." unique_id=1746243392 instance=ExtResource("6_eeevt")]
 size_flags_horizontal = 3
 size_flags_vertical = 3
+
+[node name="Laser" parent="." unique_id=1902985551 instance=ExtResource("7_j1evw")]
+position = Vector2(1, 320)
