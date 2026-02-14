@@ -2,6 +2,7 @@ class_name Board
 extends Node2D
 
 signal player_entered_piece
+signal lines_formed
 
 const PIECE_SPAWN_OFFSET: Vector2i = Vector2i(3,-1)
 const DAS: float = 0.3
@@ -206,4 +207,5 @@ func clear_lines(lines: Array[int]) -> void:
 				new_board_state[new_pos] = square
 	
 	board_state = new_board_state
+	lines_formed.emit(lines.size())
 #endregion

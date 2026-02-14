@@ -5,6 +5,8 @@ signal player_entered
 
 const DOOR_SHAPE_SCALE: float = 0.7
 
+var active: bool = false
+
 @onready var door_area: Area2D = $DoorArea
 @onready var door_collision_shape: CollisionShape2D = $DoorArea/DoorCollisionShape
 
@@ -57,5 +59,5 @@ func _ready() -> void:
 	add_child(door_area_br)
 
 func check_player_entered(values: DoorValues) -> void:
-	if values.flg_br and values.flg_tl:
+	if values.flg_br and values.flg_tl and active:
 		player_entered.emit()
