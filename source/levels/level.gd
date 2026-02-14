@@ -66,16 +66,9 @@ func _process(_delta: float) -> void:
 		GlobalStates.toggle = not GlobalStates.toggle
 
 func create_boundary(start_point: Vector2i, end_point: Vector2i) -> void:
-	var boundary_body: StaticBody2D = StaticBody2D.new()
-	var boundary_shape: CollisionShape2D = CollisionShape2D.new()
-	var boundary_segment: SegmentShape2D = SegmentShape2D.new()
-	boundary_segment.a = start_point
-	boundary_segment.b = end_point
-	boundary_shape.shape = boundary_segment
-	boundary_body.add_child(boundary_shape)
-	boundary_body.set_collision_layer_value(3, true)
-	boundary_body.set_collision_mask_value(1, true)
-	add_child(boundary_body)
+	var boundary: Boundary = preload("res://source/levels/boundary/boundary.tscn").instantiate()
+	boundary.set_borders(start_point, end_point)
+	add_child(boundary)
 
 func game_over() -> void:
 	if not DevGlobals.god_mode.enabled:

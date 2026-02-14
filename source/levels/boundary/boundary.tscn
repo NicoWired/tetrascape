@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://dnq72cxo5twwo"]
+
+[ext_resource type="Script" uid="uid://bublmvquxly6v" path="res://source/levels/boundary/boundary.gd" id="1_25qes"]
+
+[node name="Boundary" type="StaticBody2D" unique_id=1017262198]
+collision_layer = 4
+script = ExtResource("1_25qes")
+
+[node name="BoundaryCollision" type="CollisionShape2D" parent="." unique_id=1601252676]
