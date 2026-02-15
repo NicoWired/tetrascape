@@ -10,6 +10,7 @@ enum States {
 
 const CAMERA_ZOOM: Vector2 = Vector2(2,2)
 
+var camera_zoom_tween: Tween
 var cfg: PlayerConfig = PlayerConfig.new()
 var charging_jump: float = 0
 var remaining_coyote_time: float = 0
@@ -124,6 +125,11 @@ func on_toggle_changed() -> void:
 	
 	# update camera zoom
 	if enabled:
-		camera_2d.zoom = CAMERA_ZOOM
+		change_camera_zoom(CAMERA_ZOOM, 0.3)
 	else:
-		camera_2d.zoom = Vector2.ONE
+		change_camera_zoom(Vector2.ONE, 0.3)
+
+func change_camera_zoom(new_zoom: Vector2, animation_time: float) -> void:
+	camera_zoom_tween = create_tween()
+	camera_zoom_tween.tween_property(camera_2d, "zoom", new_zoom, animation_time)
+	camera_zoom_tween.play()
