@@ -8,6 +8,8 @@ enum States {
 	JUMPING
 }
 
+const CAMERA_ZOOM: Vector2 = Vector2(2,2)
+
 var cfg: PlayerConfig = PlayerConfig.new()
 var charging_jump: float = 0
 var remaining_coyote_time: float = 0
@@ -26,17 +28,25 @@ var state: States:
 			_:
 				assert(false, "invalid player state %s" % value)
 		state = value
+var enabled: bool = false:
+	set(value):
+		enabled = value
+		on_toggle_changed()
 
 @onready var player_animation: AnimatedSprite2D = $PlayerAnimation
+@onready var camera_2d: Camera2D = $Camera2D
 
 
 func _ready() -> void:
 	scale = Vector2(cfg.values.scale_size, cfg.values.scale_size)
-	GlobalStates.toggled_changed.connect(on_toggle_changed)
+	camera_2d.limit_top = 0
+	camera_2d.limit_left = 0
+	camera_2d.limit_bottom = GameConfig.BOARD_SIZE.y * GameConfig.TILE_SIZE
+	camera_2d.limit_right = GameConfig.BOARD_SIZE.x * GameConfig.TILE_SIZE
 	initialize()
 
 func _physics_process(delta: float) -> void:
-	if GlobalStates.toggle:
+	if not enabled:
 		return
 	
 	# activate coyote time
@@ -106,7 +116,14 @@ func initialize() -> void:
 	state = States.IDLE
 
 func on_toggle_changed() -> void:
-	if not GlobalStates.toggle and player_animation.is_playing():
+	# update animation status
+	if not enabled and player_animation.is_playing():
 		player_animation.pause()
 	else:
 		player_animation.play()
+	
+	# update camera zoom
+	if enabled:
+		camera_2d.zoom = CAMERA_ZOOM
+	else:
+		camera_2d.zoom = Vector2.ONE

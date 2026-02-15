@@ -8,6 +8,7 @@ const PIECE_SPAWN_OFFSET: Vector2i = Vector2i(3,-1)
 const DAS: float = 0.3
 const REPEAT_RATE: float = 0.05
 
+var enabled: bool = true
 var das_cd: float = DAS
 var autorepeat_cd: float = REPEAT_RATE
 var current_piece_position: Vector2i = Vector2i(0,0)
@@ -22,7 +23,7 @@ func _ready() -> void:
 	initialize()
 
 func _process(delta: float) -> void:
-	if not GlobalStates.toggle:
+	if not enabled:
 		return
 	
 	#region inputs

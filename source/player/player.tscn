@@ -82,3 +82,5 @@ shape = SubResource("CapsuleShape2D_u10tu")
 position = Vector2(0, -2)
 sprite_frames = SubResource("SpriteFrames_y2357")
 animation = &"idle"
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=973607215]

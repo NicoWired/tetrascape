@@ -63,7 +63,12 @@ func initialize() -> void:
 
 func _process(_delta: float) -> void:
 	if Input.is_action_just_pressed("toggle"):
-		GlobalStates.toggle = not GlobalStates.toggle
+		board.enabled = not board.enabled
+		player.enabled = not player.enabled
+	if Input.is_action_just_pressed("esc"):
+		for child in get_children():
+			if child is ControlCutre:
+				child.visible = not child.visible
 
 func create_boundary(start_point: Vector2i, end_point: Vector2i) -> void:
 	var boundary: Boundary = preload("res://source/levels/boundary/boundary.tscn").instantiate()
@@ -80,6 +85,7 @@ func _dev_tools() -> void:
 	var cc: ControlCutre = preload("res://source/dev/controlcutre.tscn").instantiate()
 	cc.position = Vector2i(GameConfig.TILE_SIZE * GameConfig.BOARD_SIZE.x + 16, 48)
 	cc.min_size.x = 500
+	cc.visible = false
 	add_child(cc)
 
 func on_countdown_tick() -> void:
