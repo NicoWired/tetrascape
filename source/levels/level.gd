@@ -5,10 +5,11 @@ const EXIT_DOOR_COORDS: Vector2i = Vector2i(4,2) * GameConfig.TILE_SIZE
 const PLAYER_SPAWN_COORDS: Vector2i = Vector2i(4,19) * GameConfig.TILE_SIZE
 
 @export var countdown_time: int = 180
-@export var lines_required: int = 3
+@export var lines_required: int = 1
 
 var remaining_time: int
 var total_lines: int
+var current_level: int = 1
 
 @onready var exit_door: ExitDoor = $ExitDoor
 @onready var player: Player = $Player
@@ -44,7 +45,7 @@ func _ready() -> void:
 	
 	board.lines_formed.connect(on_lines_formed)
 	board.player_entered_piece.connect(game_over)
-	exit_door.player_entered.connect(game_over)
+	exit_door.player_entered.connect(level_won)
 	exit_door.global_position = EXIT_DOOR_COORDS
 	initialize()
 	
@@ -59,6 +60,7 @@ func initialize() -> void:
 	total_lines = 0
 	exit_door.active = false
 	hud.update_lines(lines_required)
+	hud.update_level(current_level)
 	board.initialize()
 
 func _process(_delta: float) -> void:
@@ -99,3 +101,7 @@ func on_lines_formed(lines: int) -> void:
 	hud.update_lines(lines_required - total_lines)
 	if total_lines >= lines_required:
 		exit_door.active = true
+
+func level_won() -> void:
+	current_level += 1
+	call_deferred("initialize")
