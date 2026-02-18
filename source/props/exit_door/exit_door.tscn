@@ -1,12 +1,71 @@
 [gd_scene format=3 uid="uid://1sabmrf8e66k"]
 
-[ext_resource type="Texture2D" uid="uid://dr4ecq0fhkprr" path="res://assets/props/door.png" id="1_qg7v3"]
-[ext_resource type="Script" path="res://source/props/exit_door/exit_door.gd" id="1_qjrui"]
+[ext_resource type="Texture2D" uid="uid://yynbnyef4x0h" path="res://assets/props/door/door_animation.png" id="1_0mbmr"]
+[ext_resource type="Script" uid="uid://cj3rod0fdlykv" path="res://source/props/exit_door/exit_door.gd" id="1_qjrui"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_qjrui"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_s7ip3"]
+atlas = ExtResource("1_0mbmr")
+region = Rect2(0, 0, 100, 100)
 
-[node name="ExitDoor" type="Sprite2D" unique_id=2129260683]
-texture = ExtResource("1_qg7v3")
+[sub_resource type="AtlasTexture" id="AtlasTexture_38gnd"]
+atlas = ExtResource("1_0mbmr")
+region = Rect2(100, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cmvjj"]
+atlas = ExtResource("1_0mbmr")
+region = Rect2(200, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6vv8d"]
+atlas = ExtResource("1_0mbmr")
+region = Rect2(300, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fohl8"]
+atlas = ExtResource("1_0mbmr")
+region = Rect2(400, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ocoue"]
+atlas = ExtResource("1_0mbmr")
+region = Rect2(500, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1abxh"]
+atlas = ExtResource("1_0mbmr")
+region = Rect2(600, 0, 100, 100)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_nyypv"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s7ip3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_38gnd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cmvjj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6vv8d")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fohl8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ocoue")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1abxh")
+}],
+"loop": false,
+"name": &"open",
+"speed": 10.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_0mbmr"]
+radius = 4.1231055
+
+[node name="ExitDoor" type="AnimatedSprite2D" unique_id=1748242629]
+sprite_frames = SubResource("SpriteFrames_nyypv")
+animation = &"open"
 centered = false
 script = ExtResource("1_qjrui")
 
@@ -14,4 +73,5 @@ script = ExtResource("1_qjrui")
 collision_layer = 8
 
 [node name="DoorCollisionShape" type="CollisionShape2D" parent="DoorArea" unique_id=1311417245]
-shape = SubResource("RectangleShape2D_qjrui")
+position = Vector2(49, 49)
+shape = SubResource("CircleShape2D_0mbmr")

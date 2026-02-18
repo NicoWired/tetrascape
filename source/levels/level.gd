@@ -1,7 +1,7 @@
 class_name Level
 extends Node2D
 
-const EXIT_DOOR_COORDS: Vector2i = Vector2i(4,2) * GameConfig.TILE_SIZE
+const EXIT_DOOR_COORDS: Vector2i = Vector2i(4,4) * GameConfig.TILE_SIZE
 const PLAYER_SPAWN_COORDS: Vector2i = Vector2i(4,19) * GameConfig.TILE_SIZE
 
 @export var countdown_time: int = 180
