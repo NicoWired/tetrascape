@@ -2,6 +2,7 @@ class_name Board
 extends Node2D
 
 signal player_entered_piece
+signal player_hit_spikes
 signal lines_formed
 
 const PIECE_SPAWN_OFFSET: Vector2i = Vector2i(3,-1)
@@ -129,6 +130,7 @@ func spawn_piece(piece_type: PieceData.PIECE_SHAPE = PieceData.PIECE_SHAPE.R) ->
 	current_piece_position = Vector2i.ZERO
 	current_piece = Piece.new(piece_type)
 	current_piece.player_entered.connect(func(): player_entered_piece.emit())
+	current_piece.player_hit_spikes.connect(func(): player_hit_spikes.emit())
 	add_child(current_piece)
 	try_to_move(PIECE_SPAWN_OFFSET)
 

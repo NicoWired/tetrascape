@@ -45,7 +45,9 @@ func _ready() -> void:
 	
 	board.lines_formed.connect(on_lines_formed)
 	board.player_entered_piece.connect(game_over)
+	board.player_hit_spikes.connect(game_over)
 	exit_door.player_entered.connect(level_won)
+	player.lost_life.connect(player_lost_life)
 	exit_door.global_position = EXIT_DOOR_COORDS
 	initialize()
 	
@@ -61,6 +63,7 @@ func initialize() -> void:
 	exit_door.active = false
 	hud.update_lines(lines_required)
 	hud.update_level(current_level)
+	hud.update_lives(int(player.cfg.values.lives))
 	board.initialize()
 
 func _process(_delta: float) -> void:
@@ -105,3 +108,6 @@ func on_lines_formed(lines: int) -> void:
 func level_won() -> void:
 	current_level += 1
 	call_deferred("initialize")
+
+func player_lost_life() -> void:
+	hud.update_lives(player.cfg.lives)

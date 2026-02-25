@@ -2,6 +2,7 @@ class_name Piece
 extends Node2D
 
 signal player_entered
+signal player_hit_spikes
 
 var piece_res: PieceData
 var current_position: int = 1
@@ -20,6 +21,7 @@ func create_piece(coordinates: Array[Vector2i], board_position: Vector2i) -> voi
 		var piece_square := PieceSquare.create(piece_res.piece_texture)
 		piece_square.position = (coord+board_position) * GameConfig.TILE_SIZE
 		piece_square.player_entered.connect(func(): player_entered.emit())
+		piece_square.player_hit_spikes.connect(func(): player_hit_spikes.emit())
 		
 		squares.append(piece_square)
 		add_child(piece_square)
