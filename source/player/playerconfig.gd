@@ -1,7 +1,6 @@
 class_name PlayerConfig
 extends Resource
 
-# movement constants
 @export var values: Dictionary[StringName,float] = {
 	&"horizontal_acceleration": 900,
 	&"horizontal_deceleration": 1500,
@@ -14,6 +13,7 @@ extends Resource
 	&"coyote_time": 0.04,
 	&"fall_speed_multiplier": 1.2,
 	&"base_size": 64,
+	&"lives": 3,
 }
 
 func _init() -> void:

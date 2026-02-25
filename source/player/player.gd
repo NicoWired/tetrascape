@@ -1,6 +1,9 @@
 class_name Player
 extends CharacterBody2D
 
+signal out_of_lives
+signal lost_life
+
 enum States {
 	IDLE,
 	RUNNING,
@@ -10,6 +13,7 @@ enum States {
 
 const CAMERA_ZOOM: Vector2 = Vector2(2,2)
 
+var taking_damage: bool = false
 var camera_zoom_tween: Tween
 var cfg: PlayerConfig = PlayerConfig.new()
 var charging_jump: float = 0
@@ -47,6 +51,9 @@ func _ready() -> void:
 	initialize()
 
 func _physics_process(delta: float) -> void:
+	if taking_damage:
+		take_damage()
+	
 	if not enabled:
 		return
 	
@@ -133,3 +140,13 @@ func change_camera_zoom(new_zoom: Vector2, animation_time: float) -> void:
 	camera_zoom_tween = create_tween()
 	camera_zoom_tween.tween_property(camera_2d, "zoom", new_zoom, animation_time)
 	camera_zoom_tween.play()
+
+func lose_life() -> void:
+	if cfg.lives > 0:
+		cfg.values.lives -= 1
+		lost_life.emit()
+	else:
+		out_of_lives.emit()
+
+func take_damage() -> void:
+	pass

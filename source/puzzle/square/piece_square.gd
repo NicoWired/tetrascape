@@ -2,6 +2,7 @@ class_name PieceSquare
 extends StaticBody2D
 
 signal player_entered
+signal player_hit_spikes
 
 const MAX_FRAMES_PLAYER_INSIDE: int = 3
 
@@ -84,7 +85,7 @@ func rotate_spikes_cc() -> void:
 
 func enable_spikes(chance: float = 0.8) -> void:
 	for spike: Spikes in spikes.get_children():
-		spike.spikes_body_entered.connect(func(): player_entered.emit())
+		spike.spikes_body_entered.connect(func(): player_hit_spikes.emit())
 		if randf() > chance:
 			spike.enable(true)
 #endregion

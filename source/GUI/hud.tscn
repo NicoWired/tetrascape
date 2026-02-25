@@ -27,3 +27,6 @@ layout_mode = 2
 
 [node name="LevelLabel" type="Label" parent="VBoxContainer" unique_id=439223041]
 layout_mode = 2
+
+[node name="LivesLabel" type="Label" parent="VBoxContainer" unique_id=426656889]
+layout_mode = 2
