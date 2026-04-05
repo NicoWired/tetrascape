@@ -11,14 +11,22 @@ enum States {
 }
 
 const CAMERA_ZOOM: Vector2 = Vector2(2,2)
+const DAMAGE_TIME: float = 1.5
 
-var taking_damage: bool = false
+var flicker_tween: Tween
+var remaining_taking_damage_time: float = 0
 var camera_zoom_tween: Tween
 var cfg: PlayerConfig = PlayerConfig.new()
 var charging_jump: float = 0
 var remaining_coyote_time: float = 0
 var was_on_floor: bool = false
 var remaining_lives: int
+
+var taking_damage: bool = false:
+	set(value):
+		taking_damage = value
+		flicker(value)
+
 var state: States:
 	set(value):
 		match value:
@@ -52,7 +60,8 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	if taking_damage:
-		take_damage()
+		take_damage(delta)
+		return
 	
 	if not enabled:
 		return
@@ -143,11 +152,29 @@ func change_camera_zoom(new_zoom: Vector2, animation_time: float) -> void:
 	camera_zoom_tween.play()
 
 func lose_life() -> void:
-	if remaining_lives > 0:
-		remaining_lives -= 1
-		take_damage()
-	else:
-		out_of_lives.emit()
+	if not taking_damage:
+		if remaining_lives > 0:
+			remaining_lives -= 1
+			taking_damage = true
+			remaining_taking_damage_time = DAMAGE_TIME
+		else:
+			out_of_lives.emit()
 
-func take_damage() -> void:
-	print("ouch!")
+func take_damage(delta: float) -> void:
+	remaining_taking_damage_time = move_toward(remaining_taking_damage_time, 0, delta)
+	if remaining_taking_damage_time == 0:
+		taking_damage = false
+
+func flicker(active: bool) -> void:
+	if flicker_tween:
+		if flicker_tween.is_running() or not active:
+			self.modulate.a = 1
+			flicker_tween.kill()
+	
+	if active:
+		flicker_tween = create_tween()
+		flicker_tween.tween_property(self, "modulate:a", 0, 0.2)
+		flicker_tween.tween_property(self, "modulate:a", 1, 0.2)
+		flicker_tween.set_loops()
+		flicker_tween.play()
+	
