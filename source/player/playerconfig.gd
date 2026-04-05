@@ -14,6 +14,7 @@ extends Resource
 	&"fall_speed_multiplier": 1.2,
 	&"base_size": 64,
 	&"lives": 3,
+	&"continues": 3,
 }
 
 func _init() -> void:

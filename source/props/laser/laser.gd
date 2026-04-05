@@ -14,3 +14,4 @@ func _ready() -> void:
 	fanning_tween.tween_property(laser_beam, "rotation_degrees", 0, fanning_time)
 	fanning_tween.set_loops()
 	fanning_tween.play()
+ 

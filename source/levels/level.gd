@@ -45,13 +45,14 @@ func _ready() -> void:
 	
 	board.lines_formed.connect(on_lines_formed)
 	board.player_entered_piece.connect(game_over)
-	board.player_hit_spikes.connect(game_over)
+	board.player_hit_spikes.connect(hurt_player)
 	exit_door.player_entered.connect(level_won)
-	player.lost_life.connect(player_lost_life)
 	exit_door.global_position = EXIT_DOOR_COORDS
 	initialize()
 	
-	laser.laser_beam.player_collision.connect(game_over)
+	laser.laser_beam.player_collision.connect(hurt_player)
+	
+	player.out_of_lives.connect(game_over)
 	
 	_dev_tools()
 
@@ -109,5 +110,6 @@ func level_won() -> void:
 	current_level += 1
 	call_deferred("initialize")
 
-func player_lost_life() -> void:
-	hud.update_lives(player.cfg.lives)
+func hurt_player() -> void:
+	player.lose_life()
+	hud.update_lives(player.remaining_lives)

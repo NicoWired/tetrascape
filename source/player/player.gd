@@ -2,7 +2,6 @@ class_name Player
 extends CharacterBody2D
 
 signal out_of_lives
-signal lost_life
 
 enum States {
 	IDLE,
@@ -19,6 +18,7 @@ var cfg: PlayerConfig = PlayerConfig.new()
 var charging_jump: float = 0
 var remaining_coyote_time: float = 0
 var was_on_floor: bool = false
+var remaining_lives: int
 var state: States:
 	set(value):
 		match value:
@@ -122,6 +122,7 @@ func _physics_process(delta: float) -> void:
 
 func initialize() -> void:
 	state = States.IDLE
+	remaining_lives = int(cfg.values.lives)
 
 func on_toggle_changed() -> void:
 	# update animation status
@@ -142,11 +143,11 @@ func change_camera_zoom(new_zoom: Vector2, animation_time: float) -> void:
 	camera_zoom_tween.play()
 
 func lose_life() -> void:
-	if cfg.lives > 0:
-		cfg.values.lives -= 1
-		lost_life.emit()
+	if remaining_lives > 0:
+		remaining_lives -= 1
+		take_damage()
 	else:
 		out_of_lives.emit()
 
 func take_damage() -> void:
-	pass
+	print("ouch!")
