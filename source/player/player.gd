@@ -13,6 +13,7 @@ enum States {
 const CAMERA_ZOOM: Vector2 = Vector2(2,2)
 const DAMAGE_TIME: float = 1.5
 
+var damage_direction: int
 var flicker_tween: Tween
 var remaining_taking_damage_time: float = 0
 var camera_zoom_tween: Tween
@@ -26,6 +27,10 @@ var taking_damage: bool = false:
 	set(value):
 		taking_damage = value
 		flicker(value)
+		if value:
+			player_animation.pause()
+		else:
+			player_animation.play()
 
 var state: States:
 	set(value):
@@ -151,10 +156,15 @@ func change_camera_zoom(new_zoom: Vector2, animation_time: float) -> void:
 	camera_zoom_tween.tween_property(camera_2d, "zoom", new_zoom, animation_time)
 	camera_zoom_tween.play()
 
+#region take_damage
 func lose_life() -> void:
 	if not taking_damage:
 		if remaining_lives > 0:
 			remaining_lives -= 1
+			if velocity.x < 0:
+				damage_direction = 1
+			else:
+				damage_direction = -1
 			taking_damage = true
 			remaining_taking_damage_time = DAMAGE_TIME
 		else:
@@ -162,6 +172,9 @@ func lose_life() -> void:
 
 func take_damage(delta: float) -> void:
 	remaining_taking_damage_time = move_toward(remaining_taking_damage_time, 0, delta)
+	velocity.y = 0
+	velocity.x = delta * damage_direction * 1000
+	move_and_slide()
 	if remaining_taking_damage_time == 0:
 		taking_damage = false
 
@@ -173,8 +186,8 @@ func flicker(active: bool) -> void:
 	
 	if active:
 		flicker_tween = create_tween()
-		flicker_tween.tween_property(self, "modulate:a", 0, 0.2)
+		flicker_tween.tween_property(self, "modulate:a", 0.2, 0.2)
 		flicker_tween.tween_property(self, "modulate:a", 1, 0.2)
 		flicker_tween.set_loops()
 		flicker_tween.play()
-	
+#endregion take_damage

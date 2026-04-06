@@ -15,7 +15,7 @@ var current_level: int = 1
 @onready var player: Player = $Player
 @onready var board: Board = $Board
 @onready var countdown: Timer = $Countdown
-@onready var hud: GameHUD = $HUD
+@onready var hud: GameHUD = $HUDLayer/HUD
 @onready var laser: Laser = $Laser
 
 
